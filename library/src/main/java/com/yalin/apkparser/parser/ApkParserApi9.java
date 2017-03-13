@@ -104,7 +104,10 @@ class ApkParserApi9 extends ApkParser {
 
     @Override
     public ServiceInfo generateServiceInfo(Object service, int flags) throws Exception {
-        return null;
+        // public static final ServiceInfo generateServiceInfo(Service s, int flags)
+        Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
+                "generateServiceInfo", sServiceClass, int.class);
+        return (ServiceInfo) method.invoke(null, service, flags);
     }
 
     @Override

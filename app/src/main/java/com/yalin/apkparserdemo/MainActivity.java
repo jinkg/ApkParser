@@ -18,10 +18,10 @@
 package com.yalin.apkparserdemo;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,6 +29,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,7 @@ import java.util.List;
  * @since 2017/3/13.
  */
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     private ExpandableListView mExpandableListView;
 
     @Override
@@ -84,9 +85,11 @@ public class MainActivity extends Activity {
                     Environment.getExternalStorageDirectory() + "/ApkParser/wifi.apk");
 
             List<ActivityInfo> activityInfos = parser.getActivities();
+            List<ServiceInfo> serviceInfos = parser.getServices();
 
             List<ParentItem> parents = new ArrayList<>();
             parents.add(new ActivityParent(activityInfos));
+            parents.add(new ServiceParent(serviceInfos));
             mExpandableListView.setAdapter(new ListAdapter(this, parents));
         } catch (Exception e) {
             e.printStackTrace();

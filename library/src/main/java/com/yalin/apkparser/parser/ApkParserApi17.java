@@ -20,6 +20,7 @@ package com.yalin.apkparser.parser;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ServiceInfo;
 
 import com.yalin.apkparser.compat.UserHandleCompat;
 import com.yalin.apkparser.reflect.MethodUtil;
@@ -52,5 +53,14 @@ class ApkParserApi17 extends ApkParserApi16 {
                 sActivityClass, int.class, sPackageUserStateClass, int.class);
         return (ActivityInfo) method.invoke(null, activity, flags,
                 mDefaultPackageUserState, mUserId);
+    }
+
+    @Override
+    public ServiceInfo generateServiceInfo(Object service, int flags) throws Exception {
+        // public static final ServiceInfo generateServiceInfo(Service s, int flags, PackageUserState state, int userId)
+        Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
+                "generateServiceInfo", sServiceClass, int.class,
+                sPackageUserStateClass, int.class);
+        return (ServiceInfo) method.invoke(null, service, flags, mDefaultPackageUserState, mUserId);
     }
 }

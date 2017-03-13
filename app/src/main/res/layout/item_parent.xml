@@ -19,6 +19,7 @@
     android:id="@+id/parent_name"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
     android:gravity="center"
     android:padding="10dp"
     android:textColor="@android:color/black"

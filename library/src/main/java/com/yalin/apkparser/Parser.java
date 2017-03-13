@@ -26,6 +26,7 @@ import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
+import android.text.TextUtils;
 
 import com.yalin.apkparser.parser.ApkParser;
 import com.yalin.apkparser.utils.ComponentNameComparator;
@@ -115,9 +116,35 @@ public class Parser {
                 mActivityIntentFilterCache.put(componentName, new ArrayList<>(filters));
             }
         }
+
+        List services = mParser.getServices();
+        for (Object data : services) {
+            ComponentName componentName =
+                    new ComponentName(mPackageName, mParser.readNameFromComponent(data));
+            synchronized (mServiceObjCache) {
+                mServiceObjCache.put(componentName, data);
+            }
+            synchronized (mServiceInfoCache) {
+                ServiceInfo value = mParser.generateServiceInfo(data, 0);
+                if (TextUtils.isEmpty(value.processName)) {
+                    value.processName = value.packageName;
+                }
+                mServiceInfoCache.put(componentName, value);
+            }
+
+            List<IntentFilter> filters = mParser.readIntentFilterFromComponent(data);
+            synchronized (mServiceIntentFilterCache) {
+                mServiceIntentFilterCache.remove(componentName);
+                mServiceIntentFilterCache.put(componentName, new ArrayList<>(filters));
+            }
+        }
     }
 
     public List<ActivityInfo> getActivities() throws Exception {
         return new ArrayList<>(mActivityInfoCache.values());
+    }
+
+    public List<ServiceInfo> getServices() throws Exception {
+        return new ArrayList<>(mServiceInfoCache.values());
     }
 }

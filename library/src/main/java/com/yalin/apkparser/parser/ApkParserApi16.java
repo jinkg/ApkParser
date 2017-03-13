@@ -19,6 +19,7 @@ package com.yalin.apkparser.parser;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ServiceInfo;
 
 import com.yalin.apkparser.reflect.MethodUtil;
 
@@ -35,7 +36,7 @@ class ApkParserApi16 extends ApkParserApi14 {
 
     protected int mUserId;
 
-    ApkParserApi16(Context context) throws Exception{
+    ApkParserApi16(Context context) throws Exception {
         super(context);
         mStopped = false;
         mEnabledState = 0;
@@ -49,5 +50,14 @@ class ApkParserApi16 extends ApkParserApi14 {
                 boolean.class, int.class, int.class);
         return (ActivityInfo) method.invoke(null, activity, flags,
                 mStopped, mEnabledState, mUserId);
+    }
+
+    @Override
+    public ServiceInfo generateServiceInfo(Object service, int flags) throws Exception {
+        // public static final ServiceInfo generateServiceInfo(Service s, int flags, boolean stopped, int enabledState, int userId)*/
+        Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
+                "generateServiceInfo", sServiceClass, int.class, boolean.class,
+                int.class, int.class);
+        return (ServiceInfo) method.invoke(null, service, flags, mStopped, mEnabledState, mUserId);
     }
 }
