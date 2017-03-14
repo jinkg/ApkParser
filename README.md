@@ -2,7 +2,7 @@
 A library to parse .apk file, which can get activities,services ... in apk
 
 ### Screenshots
-<img src="https://github.com/jinkg/Screenshots/blob/master/ApkParser/apkparser.png" width="240" height="320">
+<img src="https://github.com/jinkg/Screenshots/blob/master/ApkParser/apkparser.png" width="240" height="440">
 
 ### Usage
 
