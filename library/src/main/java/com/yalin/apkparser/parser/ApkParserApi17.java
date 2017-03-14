@@ -20,6 +20,8 @@ package com.yalin.apkparser.parser;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 
 import com.yalin.apkparser.compat.UserHandleCompat;
@@ -61,6 +63,27 @@ class ApkParserApi17 extends ApkParserApi16 {
         Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
                 "generateServiceInfo", sServiceClass, int.class,
                 sPackageUserStateClass, int.class);
-        return (ServiceInfo) method.invoke(null, service, flags, mDefaultPackageUserState, mUserId);
+        return (ServiceInfo) method.invoke(null, service, flags,
+                mDefaultPackageUserState, mUserId);
+    }
+
+    @Override
+    public ProviderInfo generateProviderInfo(Object provider, int flags) throws Exception {
+        // public static final ProviderInfo generateProviderInfo(Provider p, int flags, PackageUserState state, int userId)
+        Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
+                "generateProviderInfo", sProviderClass, int.class,
+                sPackageUserStateClass, int.class);
+        return (ProviderInfo) method.invoke(null, provider, flags,
+                mDefaultPackageUserState, mUserId);
+    }
+
+    @Override
+    public ApplicationInfo generateApplicationInfo(int flags) throws Exception {
+        // public static ApplicationInfo generateApplicationInfo(Package p, int flags, PackageUserState state, int userId)
+        Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
+                "generateApplicationInfo", mPackage.getClass(), int.class,
+                sPackageUserStateClass, int.class);
+        return (ApplicationInfo) method.invoke(null, mPackage, flags,
+                mDefaultPackageUserState, mUserId);
     }
 }

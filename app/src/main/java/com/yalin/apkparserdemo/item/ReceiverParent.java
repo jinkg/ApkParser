@@ -15,20 +15,31 @@
  *
  */
 
-package com.yalin.apkparserdemo;
+package com.yalin.apkparserdemo.item;
 
+import android.content.pm.ActivityInfo;
 import android.view.View;
+import android.widget.TextView;
+
+import com.yalin.apkparserdemo.R;
+
+import java.util.List;
 
 /**
  * @author jinyalin
  * @since 2017/3/13.
  */
 
-public abstract class ParentItem {
+public class ReceiverParent extends ActivityParent {
 
-    public abstract int getChildCount();
+    public ReceiverParent(List<ActivityInfo> activityInfos) {
+        super(activityInfos);
+    }
 
-    public abstract void bindParentView(View convertView);
+    @Override
+    public void bindParentView(View convertView) {
+        TextView parentName = (TextView) convertView.findViewById(R.id.parent_name);
+        parentName.setText("ReceiverInfo");
+    }
 
-    public abstract void bindChildView(int childPosition, View convertView);
 }

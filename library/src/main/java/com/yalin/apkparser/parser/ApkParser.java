@@ -119,6 +119,4 @@ public abstract class ApkParser {
     public abstract String readNameFromComponent(Object data) throws Exception;
 
     public abstract List<IntentFilter> readIntentFilterFromComponent(Object data) throws Exception;
-
-    public abstract void writeSignature(Signature[] signatures) throws Exception;
 }

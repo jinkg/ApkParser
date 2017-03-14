@@ -15,11 +15,13 @@
  *
  */
 
-package com.yalin.apkparserdemo;
+package com.yalin.apkparserdemo.item;
 
-import android.content.pm.ActivityInfo;
+import android.content.pm.InstrumentationInfo;
 import android.view.View;
 import android.widget.TextView;
+
+import com.yalin.apkparserdemo.R;
 
 import java.util.List;
 
@@ -28,29 +30,23 @@ import java.util.List;
  * @since 2017/3/13.
  */
 
-public class ActivityParent extends ParentItem {
-    private List<ActivityInfo> mActivityInfos;
+public class InstrumentationParent extends ParentItem<InstrumentationInfo> {
 
-    public ActivityParent(List<ActivityInfo> activityInfos) {
-        mActivityInfos = activityInfos;
-    }
 
-    @Override
-    public int getChildCount() {
-        return mActivityInfos == null ? 0 : mActivityInfos.size();
+    public InstrumentationParent(List<InstrumentationInfo> children) {
+        super(children);
     }
 
     @Override
     public void bindParentView(View convertView) {
         TextView parentName = (TextView) convertView.findViewById(R.id.parent_name);
-        parentName.setText("ActivityInfo");
+        parentName.setText("InstrumentationInfo");
     }
 
     @Override
     public void bindChildView(int childPosition, View convertView) {
         TextView childName = (TextView) convertView.findViewById(R.id.child_name);
-        childName.setText(mActivityInfos.get(childPosition).name);
+        childName.setText(mChildren.get(childPosition).name);
     }
-
 
 }

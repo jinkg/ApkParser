@@ -15,11 +15,13 @@
  *
  */
 
-package com.yalin.apkparserdemo;
+package com.yalin.apkparserdemo.item;
 
 import android.content.pm.ServiceInfo;
 import android.view.View;
 import android.widget.TextView;
+
+import com.yalin.apkparserdemo.R;
 
 import java.util.List;
 
@@ -28,16 +30,9 @@ import java.util.List;
  * @since 2017/3/13.
  */
 
-public class ServiceParent extends ParentItem {
-    private List<ServiceInfo> mServiceInfos;
-
-    public ServiceParent(List<ServiceInfo> serviceInfos) {
-        mServiceInfos = serviceInfos;
-    }
-
-    @Override
-    public int getChildCount() {
-        return mServiceInfos == null ? 0 : mServiceInfos.size();
+public class ServiceParent extends ParentItem<ServiceInfo> {
+    public ServiceParent(List<ServiceInfo> children) {
+        super(children);
     }
 
     @Override
@@ -49,7 +44,7 @@ public class ServiceParent extends ParentItem {
     @Override
     public void bindChildView(int childPosition, View convertView) {
         TextView childName = (TextView) convertView.findViewById(R.id.child_name);
-        childName.setText(mServiceInfos.get(childPosition).name);
+        childName.setText(mChildren.get(childPosition).name);
     }
 
 }

@@ -126,9 +126,6 @@ public class Parser {
             }
             synchronized (mServiceInfoCache) {
                 ServiceInfo value = mParser.generateServiceInfo(data, 0);
-                if (TextUtils.isEmpty(value.processName)) {
-                    value.processName = value.packageName;
-                }
                 mServiceInfoCache.put(componentName, value);
             }
 
@@ -136,6 +133,94 @@ public class Parser {
             synchronized (mServiceIntentFilterCache) {
                 mServiceIntentFilterCache.remove(componentName);
                 mServiceIntentFilterCache.put(componentName, new ArrayList<>(filters));
+            }
+        }
+
+        List providers = mParser.getProviders();
+        for (Object data : providers) {
+            ComponentName componentName =
+                    new ComponentName(mPackageName, mParser.readNameFromComponent(data));
+            synchronized (mProviderObjCache) {
+                mProviderObjCache.put(componentName, data);
+            }
+            synchronized (mProviderInfoCache) {
+                ProviderInfo value = mParser.generateProviderInfo(data, 0);
+                mProviderInfoCache.put(componentName, value);
+            }
+
+            List<IntentFilter> filters = mParser.readIntentFilterFromComponent(data);
+            synchronized (mProviderIntentFilterCache) {
+                mProviderIntentFilterCache.remove(componentName);
+                mProviderIntentFilterCache.put(componentName, new ArrayList<>(filters));
+            }
+        }
+
+        List receivers = mParser.getReceivers();
+        for (Object data : receivers) {
+            ComponentName componentName =
+                    new ComponentName(mPackageName, mParser.readNameFromComponent(data));
+            synchronized (mReceiversObjCache) {
+                mReceiversObjCache.put(componentName, data);
+            }
+
+            synchronized (mReceiversInfoCache) {
+                ActivityInfo value = mParser.generateReceiverInfo(data, 0);
+                mReceiversInfoCache.put(componentName, value);
+            }
+            List<IntentFilter> filters = mParser.readIntentFilterFromComponent(data);
+            synchronized (mReceiverIntentFilterCache) {
+                mReceiverIntentFilterCache.remove(componentName);
+                mReceiverIntentFilterCache.put(componentName, new ArrayList<>(filters));
+            }
+        }
+
+        List instrumentations = mParser.getInstrumentations();
+        for (Object data : instrumentations) {
+            ComponentName componentName =
+                    new ComponentName(mPackageName, mParser.readNameFromComponent(data));
+            synchronized (mInstrumentationObjCache) {
+                mInstrumentationObjCache.put(componentName, data);
+            }
+
+            synchronized (mInstrumentationInfoCache) {
+                InstrumentationInfo value = mParser.generateInstrumentationInfo(data, 0);
+                mInstrumentationInfoCache.put(componentName, value);
+            }
+        }
+
+        List permissions = mParser.getPermissions();
+        for (Object data : permissions) {
+            String cls = mParser.readNameFromComponent(data);
+            if (cls != null) {
+                ComponentName componentName = new ComponentName(mPackageName, cls);
+                synchronized (mPermissionsObjCache) {
+                    mPermissionsObjCache.put(componentName, data);
+                }
+                synchronized (mPermissionsInfoCache) {
+                    PermissionInfo value = mParser.generatePermissionInfo(data, 0);
+                    mPermissionsInfoCache.put(componentName, value);
+                }
+            }
+        }
+
+        List permissionGroups = mParser.getPermissionGroups();
+        for (Object data : permissionGroups) {
+            ComponentName componentName =
+                    new ComponentName(mPackageName, mParser.readNameFromComponent(data));
+            synchronized (mPermissionGroupObjCache) {
+                mPermissionGroupObjCache.put(componentName, data);
+            }
+            synchronized (mPermissionGroupInfoCache) {
+                PermissionGroupInfo value = mParser.generatePermissionGroupInfo(data, 0);
+                mPermissionGroupInfoCache.put(componentName, value);
+            }
+        }
+
+        //noinspection unchecked
+        List<String> requestedPermissions = mParser.getRequestedPermissions();
+        if (requestedPermissions != null && requestedPermissions.size() > 0) {
+            synchronized (mRequestedPermissionsCache) {
+                mRequestedPermissionsCache.addAll(requestedPermissions);
             }
         }
     }
@@ -146,5 +231,35 @@ public class Parser {
 
     public List<ServiceInfo> getServices() throws Exception {
         return new ArrayList<>(mServiceInfoCache.values());
+    }
+
+    public List<ProviderInfo> getProviders() throws Exception {
+        return new ArrayList<>(mProviderInfoCache.values());
+    }
+
+    public List<ActivityInfo> getReceivers() throws Exception {
+        return new ArrayList<>(mReceiversInfoCache.values());
+    }
+
+    public List<PermissionInfo> getPermissions() throws Exception {
+        return new ArrayList<>(mPermissionsInfoCache.values());
+    }
+
+    public List<PermissionGroupInfo> getPermissionGroups() throws Exception {
+        return new ArrayList<>(mPermissionGroupInfoCache.values());
+    }
+
+    public List<InstrumentationInfo> getInstrumentations() {
+        return new ArrayList<>(mInstrumentationInfoCache.values());
+    }
+
+    public List<String> getRequestedPermissions() throws Exception {
+        synchronized (mRequestedPermissionsCache) {
+            return new ArrayList<>(mRequestedPermissionsCache);
+        }
+    }
+
+    public String getPackageName() throws Exception {
+        return mPackageName;
     }
 }

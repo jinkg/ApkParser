@@ -20,7 +20,10 @@ package com.yalin.apkparserdemo;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.pm.InstrumentationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
+import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +40,14 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 import com.yalin.apkparser.Parser;
+import com.yalin.apkparserdemo.item.ActivityParent;
+import com.yalin.apkparserdemo.item.InstrumentationParent;
+import com.yalin.apkparserdemo.item.PackageParent;
+import com.yalin.apkparserdemo.item.ParentItem;
+import com.yalin.apkparserdemo.item.PermissionParent;
+import com.yalin.apkparserdemo.item.ProviderParent;
+import com.yalin.apkparserdemo.item.ReceiverParent;
+import com.yalin.apkparserdemo.item.ServiceParent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,12 +95,23 @@ public class MainActivity extends AppCompatActivity {
             Parser parser = new Parser(getApplicationContext(),
                     Environment.getExternalStorageDirectory() + "/ApkParser/wifi.apk");
 
+            String packageName = parser.getPackageName();
             List<ActivityInfo> activityInfos = parser.getActivities();
             List<ServiceInfo> serviceInfos = parser.getServices();
+            List<ActivityInfo> receiverInfos = parser.getReceivers();
+            List<ProviderInfo> providerInfos = parser.getProviders();
+            List<InstrumentationInfo> instrumentationInfos = parser.getInstrumentations();
+            List<PermissionInfo> permissionInfos = parser.getPermissions();
 
             List<ParentItem> parents = new ArrayList<>();
+            parents.add(new PackageParent(packageName));
             parents.add(new ActivityParent(activityInfos));
             parents.add(new ServiceParent(serviceInfos));
+            parents.add(new ReceiverParent(receiverInfos));
+            parents.add(new ProviderParent(providerInfos));
+            parents.add(new InstrumentationParent(instrumentationInfos));
+            parents.add(new PermissionParent(permissionInfos));
+
             mExpandableListView.setAdapter(new ListAdapter(this, parents));
         } catch (Exception e) {
             e.printStackTrace();

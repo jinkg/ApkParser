@@ -28,7 +28,6 @@ import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
-import android.content.pm.Signature;
 import android.util.DisplayMetrics;
 
 import com.yalin.apkparser.reflect.FieldUtil;
@@ -91,7 +90,10 @@ class ApkParserApi9 extends ApkParser {
 
     @Override
     public void collectCertificates(int flags) throws Exception {
-
+        // public void collectCertificates(Package pkg, int flags) throws PackageParserException
+        Method method = MethodUtil.getAccessibleMethod(sPackageParserClass, "collectCertificates",
+                mPackage.getClass(), int.class);
+        method.invoke(mPackageParser, mPackage, flags);
     }
 
     @Override
@@ -112,36 +114,56 @@ class ApkParserApi9 extends ApkParser {
 
     @Override
     public ProviderInfo generateProviderInfo(Object provider, int flags) throws Exception {
-        return null;
+        // public static final ProviderInfo generateProviderInfo(Provider p, int flags)
+        Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
+                "generateProviderInfo", sProviderClass, int.class);
+        return (ProviderInfo) method.invoke(null, provider, flags);
     }
 
     @Override
     public InstrumentationInfo generateInstrumentationInfo(
             Object instrumentation, int flags) throws Exception {
-        return null;
+        //  public static final InstrumentationInfo generateInstrumentationInfo(Instrumentation i, int flags)
+        Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
+                "generateInstrumentationInfo", sInstrumentationClass, int.class);
+        return (InstrumentationInfo) method.invoke(null, instrumentation, flags);
     }
 
     @Override
     public ApplicationInfo generateApplicationInfo(int flags) throws Exception {
-        return null;
+        // public static ApplicationInfo generateApplicationInfo(Package p, int flags)
+        Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
+                "generateApplicationInfo", mPackage.getClass(), int.class);
+        return (ApplicationInfo) method.invoke(null, mPackage, flags);
     }
 
     @Override
     public PermissionGroupInfo generatePermissionGroupInfo(
             Object permissionGroup, int flags) throws Exception {
-        return null;
+        // public static final PermissionGroupInfo generatePermissionGroupInfo(PermissionGroup pg, int flags)
+        Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
+                "generatePermissionGroupInfo", sPermissionGroupClass, int.class);
+        return (PermissionGroupInfo) method.invoke(null, permissionGroup, flags);
     }
 
     @Override
     public PermissionInfo generatePermissionInfo(Object permission, int flags) throws Exception {
-        return null;
+        // public static final PermissionInfo generatePermissionInfo(Permission p, int flags)
+        Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
+                "generatePermissionInfo", sPermissionClass, int.class);
+        return (PermissionInfo) method.invoke(null, permission, flags);
     }
 
     @Override
-    public PackageInfo generatePackageInfo(
-            int[] gids, int flags, long firstInstallTime, long lastUpdateTime,
-            HashSet<String> grantedPermissions) throws Exception {
-        return null;
+    public PackageInfo generatePackageInfo(int[] gids, int flags,
+                                           long firstInstallTime, long lastUpdateTime,
+                                           HashSet<String> grantedPermissions) throws Exception {
+        // public static PackageInfo generatePackageInfo(PackageParser.Package p, int gids[], int flags, long firstInstallTime, long lastUpdateTime)
+        Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
+                "generatePackageInfo", mPackage.getClass(), int[].class,
+                int.class, long.class, long.class);
+        return (PackageInfo) method.invoke(null, mPackage, gids, flags,
+                firstInstallTime, lastUpdateTime);
     }
 
     @Override
@@ -207,10 +229,5 @@ class ApkParserApi9 extends ApkParser {
     public List<IntentFilter> readIntentFilterFromComponent(Object data) throws Exception {
         //noinspection unchecked
         return (List<IntentFilter>) FieldUtil.readField(data, "intents");
-    }
-
-    @Override
-    public void writeSignature(Signature[] signatures) throws Exception {
-
     }
 }
