@@ -2,7 +2,7 @@
 A library to parse .apk file, which can get activities,services ... in apk
 
 ### Screenshots
-<img src="https://github.com/jinkg/Screenshots/blob/master/ApkParser/apkparser.png" width="240" height="440">
+<img src="https://github.com/jinkg/Screenshots/blob/master/ApkParser/apkparser.png" width="240" height="430">
 
 ### Usage
 
@@ -32,7 +32,7 @@ nilaynij@gmail.com.
 
 #License
 
-    Copyright 2017 YaLin Jin
+    Copyright 2017 YaLin Jin <nilaynij@gmail.com>
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
