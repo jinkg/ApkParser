@@ -21,6 +21,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.InstrumentationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
@@ -93,8 +94,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void doParse() {
         try {
-            Parser parser = new Parser(getApplicationContext(),
-                    Environment.getExternalStorageDirectory() + "/ApkParser/weixin.apk");
+            String apkFile = Environment.getExternalStorageDirectory() + "/ApkParser/weixin.apk";
+            Parser parser = new Parser(getApplicationContext(), apkFile);
+
+//            PackageManager pm = getPackageManager();
+//            PackageInfo info = pm.getPackageArchiveInfo(apkFile,
+//                    PackageManager.GET_PERMISSIONS | PackageManager.GET_SIGNATURES);
+//            PackageInfo apkPackageInfo = parser.getPackageInfo(PackageManager.GET_PERMISSIONS
+//                    | PackageManager.GET_SIGNATURES);
 
             String packageName = parser.getPackageName();
             List<ActivityInfo> activityInfos = parser.getActivities();

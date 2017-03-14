@@ -22,17 +22,18 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.InstrumentationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
-import android.text.TextUtils;
 
 import com.yalin.apkparser.parser.ApkParser;
 import com.yalin.apkparser.utils.ComponentNameComparator;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -43,8 +44,10 @@ import java.util.TreeMap;
  */
 
 public class Parser {
+    private final File mPackageFile;
     private final ApkParser mParser;
     private final String mPackageName;
+    private final PackageInfo mHostPackageInfo;
 
     private final Map<ComponentName, Object> mActivityObjCache
             = new TreeMap<>(new ComponentNameComparator());
@@ -94,9 +97,11 @@ public class Parser {
     }
 
     public Parser(Context context, File packageFile) throws Exception {
+        mPackageFile = packageFile;
         mParser = ApkParser.newApkParser(context);
         mParser.parsePackage(packageFile, 0);
         mPackageName = mParser.getPackageName();
+        mHostPackageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 
         List activities = mParser.getActivities();
         for (Object data : activities) {
@@ -223,6 +228,12 @@ public class Parser {
                 mRequestedPermissionsCache.addAll(requestedPermissions);
             }
         }
+    }
+
+    public PackageInfo getPackageInfo(int flags) throws Exception {
+        return mParser.generatePackageInfo(mHostPackageInfo.gids,
+                flags, mPackageFile.lastModified(), mPackageFile.lastModified(),
+                new HashSet<>(getRequestedPermissions()));
     }
 
     public List<ActivityInfo> getActivities() throws Exception {

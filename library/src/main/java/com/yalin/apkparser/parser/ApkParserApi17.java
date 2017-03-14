@@ -21,13 +21,18 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 
 import com.yalin.apkparser.compat.UserHandleCompat;
 import com.yalin.apkparser.reflect.MethodUtil;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author jinyalin
@@ -85,5 +90,58 @@ class ApkParserApi17 extends ApkParserApi16 {
                 sPackageUserStateClass, int.class);
         return (ApplicationInfo) method.invoke(null, mPackage, flags,
                 mDefaultPackageUserState, mUserId);
+    }
+
+    @Override
+    public PackageInfo generatePackageInfo(int[] gids, int flags, long firstInstallTime, long lastUpdateTime, HashSet<String> grantedPermissions) throws Exception {
+        // public static PackageInfo generatePackageInfo(PackageParser.Package p,
+        // int gids[], int flags, long firstInstallTime, long lastUpdateTime,
+        // HashSet<String> grantedPermissions, PackageUserState state, int userId)
+        try {
+            Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
+                    "generatePackageInfo", mPackage.getClass(), int[].class,
+                    int.class, long.class, long.class, Set.class,
+                    sPackageUserStateClass, int.class);
+            return (PackageInfo) method.invoke(null, mPackage, gids, flags,
+                    firstInstallTime, lastUpdateTime, grantedPermissions,
+                    mDefaultPackageUserState, mUserId);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
+                    "generatePackageInfo", mPackage.getClass(), int[].class,
+                    int.class, long.class, long.class, HashSet.class,
+                    sPackageUserStateClass, int.class);
+            return (PackageInfo) method.invoke(null, mPackage, gids, flags,
+                    firstInstallTime, lastUpdateTime, grantedPermissions,
+                    mDefaultPackageUserState, mUserId);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Method method = MethodUtil.getAccessibleMethod(sPackageParserClass,
+                    "generatePackageInfo", mPackage.getClass(), int[].class,
+                    int.class, long.class, long.class,
+                    sArraySetClass, sPackageUserStateClass, int.class);
+
+            Object grantedPermissionsArray = null;
+            try {
+                Constructor constructor = sArraySetClass.getConstructor(Collection.class);
+                grantedPermissionsArray = constructor.newInstance(grantedPermissions);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (grantedPermissionsArray == null) {
+                grantedPermissionsArray = grantedPermissions;
+            }
+            return (PackageInfo) method.invoke(null, mPackage, gids, flags, firstInstallTime, lastUpdateTime, grantedPermissionsArray, mDefaultPackageUserState, mUserId);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        throw new NoSuchMethodException("Can not found method generatePackageInfo");
     }
 }
