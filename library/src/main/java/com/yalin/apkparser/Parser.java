@@ -230,6 +230,10 @@ public class Parser {
         }
     }
 
+    public void collectCertificates(int flags) throws Exception {
+        mParser.collectCertificates(flags);
+    }
+
     public PackageInfo getPackageInfo(int flags) throws Exception {
         return mParser.generatePackageInfo(mHostPackageInfo.gids,
                 flags, mPackageFile.lastModified(), mPackageFile.lastModified(),

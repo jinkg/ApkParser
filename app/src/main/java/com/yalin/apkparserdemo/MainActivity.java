@@ -100,8 +100,9 @@ public class MainActivity extends AppCompatActivity {
 //            PackageManager pm = getPackageManager();
 //            PackageInfo info = pm.getPackageArchiveInfo(apkFile,
 //                    PackageManager.GET_PERMISSIONS | PackageManager.GET_SIGNATURES);
-//            PackageInfo apkPackageInfo = parser.getPackageInfo(PackageManager.GET_PERMISSIONS
-//                    | PackageManager.GET_SIGNATURES);
+            parser.collectCertificates(0);
+            PackageInfo apkPackageInfo = parser.getPackageInfo(PackageManager.GET_PERMISSIONS
+                    | PackageManager.GET_SIGNATURES);
 
             String packageName = parser.getPackageName();
             List<ActivityInfo> activityInfos = parser.getActivities();
