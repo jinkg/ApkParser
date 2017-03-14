@@ -17,8 +17,6 @@
 
 package com.yalin.apkparserdemo.item;
 
-import android.content.pm.PermissionInfo;
-import android.content.pm.ServiceInfo;
 import android.view.View;
 import android.widget.TextView;
 
@@ -31,21 +29,21 @@ import java.util.List;
  * @since 2017/3/13.
  */
 
-public class PermissionParent extends ParentItem<PermissionInfo> {
-    public PermissionParent(List<PermissionInfo> children) {
+public class RequestPermissionParent extends ParentItem<String> {
+    public RequestPermissionParent(List<String> children) {
         super(children);
     }
 
     @Override
     public void bindParentView(View convertView) {
         TextView parentName = (TextView) convertView.findViewById(R.id.parent_name);
-        parentName.setText("PermissionInfo");
+        parentName.setText("RequestPermission");
     }
 
     @Override
     public void bindChildView(int childPosition, View convertView) {
         TextView childName = (TextView) convertView.findViewById(R.id.child_name);
-        childName.setText(mChildren.get(childPosition).name);
+        childName.setText(mChildren.get(childPosition));
     }
 
 }

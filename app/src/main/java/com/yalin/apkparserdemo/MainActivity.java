@@ -44,9 +44,10 @@ import com.yalin.apkparserdemo.item.ActivityParent;
 import com.yalin.apkparserdemo.item.InstrumentationParent;
 import com.yalin.apkparserdemo.item.PackageParent;
 import com.yalin.apkparserdemo.item.ParentItem;
-import com.yalin.apkparserdemo.item.PermissionParent;
+import com.yalin.apkparserdemo.item.CustomPermissionParent;
 import com.yalin.apkparserdemo.item.ProviderParent;
 import com.yalin.apkparserdemo.item.ReceiverParent;
+import com.yalin.apkparserdemo.item.RequestPermissionParent;
 import com.yalin.apkparserdemo.item.ServiceParent;
 
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private void doParse() {
         try {
             Parser parser = new Parser(getApplicationContext(),
-                    Environment.getExternalStorageDirectory() + "/ApkParser/wifi.apk");
+                    Environment.getExternalStorageDirectory() + "/ApkParser/weixin.apk");
 
             String packageName = parser.getPackageName();
             List<ActivityInfo> activityInfos = parser.getActivities();
@@ -102,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
             List<ProviderInfo> providerInfos = parser.getProviders();
             List<InstrumentationInfo> instrumentationInfos = parser.getInstrumentations();
             List<PermissionInfo> permissionInfos = parser.getPermissions();
+            List<String> requestPermissions = parser.getRequestedPermissions();
 
             List<ParentItem> parents = new ArrayList<>();
             parents.add(new PackageParent(packageName));
@@ -110,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
             parents.add(new ReceiverParent(receiverInfos));
             parents.add(new ProviderParent(providerInfos));
             parents.add(new InstrumentationParent(instrumentationInfos));
-            parents.add(new PermissionParent(permissionInfos));
+            parents.add(new CustomPermissionParent(permissionInfos));
+            parents.add(new RequestPermissionParent(requestPermissions));
 
             mExpandableListView.setAdapter(new ListAdapter(this, parents));
         } catch (Exception e) {
