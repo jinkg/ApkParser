@@ -30,7 +30,7 @@ You can see a complete usage in the demo app.
 
 nilaynij@gmail.com.
 
-#License
+## License
 
     Copyright 2017 YaLin Jin <nilaynij@gmail.com>
 
