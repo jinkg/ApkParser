@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.apk_parser_activity_main);
 
         mExpandableListView = (ExpandableListView) findViewById(R.id.expand_list_view);
     }
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         public View getGroupView(int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.item_parent, parent, false);
+                convertView = mInflater.inflate(R.layout.apk_parser_item_parent, parent, false);
             }
             getGroup(groupPosition).bindParentView(convertView);
             return convertView;
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         public View getChildView(int groupPosition, int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.item_child, parent, false);
+                convertView = mInflater.inflate(R.layout.apk_parser_item_child, parent, false);
             }
             getGroup(groupPosition).bindChildView(childPosition, convertView);
             return convertView;
