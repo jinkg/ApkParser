@@ -1,0 +1,47 @@
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
+
+def GROUP_ID = 'com.yalin.open'
+def ARTiFACT_ID = project.name == 'app' ? 'apk-parser-app' : 'apk-parser-lib'
+def ARTiFACT_VERSION = 'yalin-SNAPSHOT'
+def REPO_KEY = 'apk_paser_local'
+def CONTEXT_URL = 'http://localhost:8081/artifactory'
+def USERNAME = 'admin'
+def PASSWORD = 'password'
+
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId = GROUP_ID
+            artifactId = ARTiFACT_ID
+            version = ARTiFACT_VERSION
+            artifact "${project.buildDir}/outputs/aar/${project.name}-debug.aar"
+        }
+    }
+}
+artifactory {
+    contextUrl = CONTEXT_URL
+    publish {
+        repository {
+            repoKey = REPO_KEY
+            username = USERNAME
+            password = PASSWORD
+            maven = true
+        }
+        defaults {
+            publishArtifacts = true
+            //这里的'aar'对应publishing任务中的'aar',任务名称可自定义
+            publications('aar')
+            publishPom = true //Publish generated POM files to Artifactory (true by default)
+            publishIvy = false
+            //Publish generated Ivy descriptor files to Artifactory (true by default)
+        }
+    }
+    resolve {
+        repository {
+            repoKey = 'jcenter'
+            username = USERNAME
+            password = PASSWORD
+        }
+    }
+}
